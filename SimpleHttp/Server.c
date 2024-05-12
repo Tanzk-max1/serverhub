@@ -23,8 +23,23 @@ int initListenFd(unsigned short port)
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;//IPV4
 	addr.sin_port = htons(port);
-	addr.sin_addr.s_addr = 
-	ret = bind(lfd)
+	addr.sin_addr.s_addr = INADDR_ANY;
+		ret = bind(lfd,(struct sockaddr*)&addr,sizeof addr);
+		if (ret == -1)
+		{
+			perror("bing");
+			return -1;
+		}
+	//设置监听
+		ret = listen(lfd, 128);//用来接受套接字上面的连接，然后再拒绝进一步的请求之前，n个连接请求被排队
+		if (ret == -1)
+		{	
+			perror("listen");
+			return -1;
+
+		}
+
 	//返回fd
-	return 0;
+
+	return lfd;
 }
